@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.codegym'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.10.2'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    // Spring Web MVC
+    implementation 'org.springframework:spring-webmvc:5.3.23'
+
+    // Servlet API
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+
+    // JSP (optional, nếu bạn dùng JSP)
+    implementation 'javax.servlet:jstl:1.2'
+
+    // Thymeleaf (nếu dùng Thymeleaf)
+    implementation 'org.thymeleaf:thymeleaf:3.1.0.RELEASE'
+    implementation 'org.thymeleaf:thymeleaf-spring5:3.1.1.RELEASE'
+
+    // Spring Data JPA + Hibernate
+    implementation 'org.springframework:spring-orm:5.3.33'
+    implementation 'org.hibernate:hibernate-core:5.6.10.Final'
+
+    // Driver kết nối MySQL
+    implementation 'mysql:mysql-connector-java:8.0.33'
+
+    // Apache Commons FileUpload (upload ảnh)
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+
+    // Apache POI (đọc file Excel)
+    implementation 'org.apache.poi:poi:5.2.5'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+
+    // Spring Security (nếu dùng)
+    implementation 'org.springframework.security:spring-security-web:5.8.5'
+    implementation 'org.springframework.security:spring-security-config:5.8.5'
+
+    // Logging
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
+
+    // JSTL (nếu dùng JSP View)
+    implementation 'javax.servlet:jstl:1.2'
+
+    // Test (optional)
+    testImplementation 'junit:junit:4.13.2'
+
+    // Hibernate để làm việc với JPA
+    implementation 'org.hibernate:hibernate-core:5.6.10.Final'
+    // Thư viện Spring Data JPA (quan trọng!)
+    implementation 'org.springframework.data:spring-data-jpa:2.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
