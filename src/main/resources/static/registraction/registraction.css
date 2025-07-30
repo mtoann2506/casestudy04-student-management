@@ -1,0 +1,36 @@
+body {
+    background: #d5e1f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0 20px;
+}
+.register-box {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 550px;
+}
+.register-box h3 {
+    color: #3a3a3a;
+    font-weight: bold;
+    text-align: center;
+}
+.register-box .form-control {
+    background-color: #edf2f7;
+    border: none;
+    border-radius: 10px;
+}
+.register-box .btn-primary {
+    background-color: #6c5ce7;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.register-box .btn-primary:hover {
+    background-color: #a29bfe;
+}
