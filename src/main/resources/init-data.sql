@@ -1,0 +1,23 @@
+-- Script khởi tạo dữ liệu cho bảng users
+-- Password được mã hóa bằng BCrypt: 123456 -> $2a$10$PrI5Gk9LGPKQzVr3mMvFSOiYr6Tx1JS3qVqBEAAQOa7qDb9d1BpXe
+
+INSERT INTO users (username, password, full_name, email, phone, role, enabled) VALUES
+('admin', '$2a$10$PrI5Gk9LGPKQzVr3mMvFSOiYr6Tx1JS3qVqBEAAQOa7qDb9d1BpXe', 'Administrator', 'admin@codegym.vn', '0123456789', 'ADMIN', true),
+('teacher1', '$2a$10$PrI5Gk9LGPKQzVr3mMvFSOiYr6Tx1JS3qVqBEAAQOa7qDb9d1BpXe', 'Nguyễn Văn Giáo Viên', 'teacher1@codegym.vn', '0123456788', 'TEACHER', true),
+('teacher2', '$2a$10$PrI5Gk9LGPKQzVr3mMvFSOiYr6Tx1JS3qVqBEAAQOa7qDb9d1BpXe', 'Trần Thị Giáo Viên', 'teacher2@codegym.vn', '0123456787', 'TEACHER', true),
+('student1', '$2a$10$PrI5Gk9LGPKQzVr3mMvFSOiYr6Tx1JS3qVqBEAAQOa7qDb9d1BpXe', 'Lê Văn Sinh Viên', 'student1@codegym.vn', '0123456786', 'STUDENT', true),
+('student2', '$2a$10$PrI5Gk9LGPKQzVr3mMvFSOiYr6Tx1JS3qVqBEAAQOa7qDb9d1BpXe', 'Phạm Thị Sinh Viên', 'student2@codegym.vn', '0123456785', 'STUDENT', true);
+
+-- Script khởi tạo dữ liệu cho bảng classes
+INSERT INTO classes (className, description, maxStudents, active) VALUES
+('C0323G1', 'Lớp Java Web Full Stack', 30, true),
+('C0323G2', 'Lớp Java Backend', 25, true),
+('C0323G3', 'Lớp Frontend React', 20, true),
+('C0323G4', 'Lớp Mobile Android', 15, true);
+
+-- Script khởi tạo dữ liệu cho bảng students
+INSERT INTO students (studentCode, fullName, email, phone, dateOfBirth, address, gender, class_id, active) VALUES
+('SV001', 'Nguyễn Văn A', 'nguyenvana@email.com', '0123456781', '2000-01-15', 'Hà Nội', 'MALE', 1, true),
+('SV002', 'Trần Thị B', 'tranthib@email.com', '0123456782', '2000-03-20', 'Hồ Chí Minh', 'FEMALE', 1, true),
+('SV003', 'Lê Văn C', 'levanc@email.com', '0123456783', '1999-07-10', 'Đà Nẵng', 'MALE', 2, true),
+('SV004', 'Phạm Thị D', 'phamthid@email.com', '0123456784', '2000-11-25', 'Cần Thơ', 'FEMALE', 2, true); 

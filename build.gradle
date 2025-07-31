@@ -49,10 +49,6 @@ dependencies {
     implementation 'org.apache.poi:poi:5.2.5'
     implementation 'org.apache.poi:poi-ooxml:5.2.5'
 
-    // Spring Security (nếu dùng)
-    implementation 'org.springframework.security:spring-security-web:5.8.5'
-    implementation 'org.springframework.security:spring-security-config:5.8.5'
-
     // Logging
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'org.slf4j:slf4j-simple:1.7.36'
@@ -63,10 +59,23 @@ dependencies {
     // Test (optional)
     testImplementation 'junit:junit:4.13.2'
 
+    // Validation
+    implementation 'org.hibernate.validator:hibernate-validator:6.2.5.Final'
+
+    // Jackson for JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4'
+
     // Hibernate để làm việc với JPA
     implementation 'org.hibernate:hibernate-core:5.6.10.Final'
     // Thư viện Spring Data JPA (quan trọng!)
     implementation 'org.springframework.data:spring-data-jpa:2.7.0'
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-web
+    implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.8.0'
+// https://mvnrepository.com/artifact/org.springframework.security/spring-security-config
+    implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.8.0'
+// https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs
+    implementation group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.8.0'
 }
 
 test {

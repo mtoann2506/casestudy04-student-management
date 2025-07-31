@@ -1,50 +1,48 @@
-package com.codegym.module4casestudy.model;
+package com.codegym.module4casestudy.dto;
 
-import javax.persistence.*;
+import com.codegym.module4casestudy.model.Student;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "students")
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class StudentDto {
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Mã học sinh không được để trống")
     private String studentCode;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Họ tên không được để trống")
     private String fullName;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Email không được để trống")
+    @Email(message = "Email không hợp lệ")
     private String email;
 
     private String phone;
 
-    @Column(nullable = false)
+    @NotNull(message = "Ngày sinh không được để trống")
+    @Past(message = "Ngày sinh phải là ngày trong quá khứ")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     private String address;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Gender gender;
+    @NotNull(message = "Giới tính không được để trống")
+    private Student.Gender gender;
 
-    @ManyToOne
-    @JoinColumn(name = "class_id")
-    private Class class_;
+    private Long classId;
+    private String className;
 
-    @Column(nullable = false)
     private boolean active = true;
 
-    public enum Gender {
-        MALE, FEMALE, OTHER
+    public StudentDto() {
     }
 
-    public Student() {
-    }
-
-    public Student(String studentCode, String fullName, String email, LocalDate dateOfBirth, Gender gender) {
+    public StudentDto(String studentCode, String fullName, String email, LocalDate dateOfBirth, Student.Gender gender) {
         this.studentCode = studentCode;
         this.fullName = fullName;
         this.email = email;
@@ -108,20 +106,28 @@ public class Student {
         this.address = address;
     }
 
-    public Gender getGender() {
+    public Student.Gender getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(Student.Gender gender) {
         this.gender = gender;
     }
 
-    public Class getClass_() {
-        return class_;
+    public Long getClassId() {
+        return classId;
     }
 
-    public void setClass_(Class class_) {
-        this.class_ = class_;
+    public void setClassId(Long classId) {
+        this.classId = classId;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public boolean isActive() {

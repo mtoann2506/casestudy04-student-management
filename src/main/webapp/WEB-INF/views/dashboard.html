@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+<h2>Chào mừng đến với hệ thống quản lý sinh viên</h2>
+<p>Xin chào, <span th:text="${#httpServletRequest.remoteUser}"></span>!</p>
+
+<p><a th:href="@{/logout}">Đăng xuất</a></p>
+
+<ul>
+    <li><a th:href="@{/student/info}">Thông tin cá nhân</a></li>
+    <li><a th:href="@{/student/schedule}">Lịch học</a></li>
+    <li><a th:href="@{/student/grades}">Kết quả học tập</a></li>
+</ul>
+</body>
+</html>

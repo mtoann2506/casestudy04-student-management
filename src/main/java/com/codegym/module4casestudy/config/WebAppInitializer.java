@@ -1,17 +1,16 @@
 package com.codegym.module4casestudy.config;
 
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{JPAConfig.class, SecurityConfig.class};
+        return new Class[]{SecurityConfig.class};
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{AppConfiguration.class};
+        return new Class[] {WebConfiguration.class};
     }
 
     @Override
