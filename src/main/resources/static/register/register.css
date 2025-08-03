@@ -99,9 +99,9 @@ header {
     display: block;
     color: white;
     text-decoration: none;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     font-size: 15px;
-    padding: 10px 16px;
+    padding: 12px 20px;
     border-radius: 8px;
     transition: all 0.2s ease;
 }
@@ -112,54 +112,71 @@ header {
     transform: translateX(4px);
 }
 
+/* ==== Login/Register Container ==== */
+.login-container {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    padding: 40px 30px 30px;
+    border-radius: 12px;
+    margin: 120px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.login-header {
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+.icon-input {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.icon-input i {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.icon-input input,
+.icon-input select {
+    padding-left: 36px;
+}
+
+.btn-login {
+    background-color: #111;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.btn-login:hover {
+    background-color: #333;
+}
+
 /* ==== Main Content ==== */
 .main-content {
     margin-left: 0;
-    padding: 100px 40px 40px;
+    padding: 100px 20px;
     flex-grow: 1;
     background: #f9f9f9;
     transition: margin-left 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .sidebar.show ~ .main-content {
     margin-left: 240px;
-}
-
-.main-content h2 {
-    margin-bottom: 30px;
-    color: #111;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-}
-
-.card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-    border: 1px solid #e5e5e5;
-    transition: all 0.2s ease;
-}
-
-.card:hover {
-    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-    transform: translateY(-4px);
-}
-
-.card h5 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #111;
-    margin-bottom: 8px;
-}
-
-.card p {
-    font-size: 14px;
-    color: #555;
 }
 
 /* ==== Footer ==== */

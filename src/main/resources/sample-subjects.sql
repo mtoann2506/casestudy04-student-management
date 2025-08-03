@@ -1,0 +1,79 @@
+-- -- Môn 1: Triết học Mác - Lênin
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Triết học Mác - Lênin', 3, 'Giới thiệu các nguyên lý cơ bản của chủ nghĩa Mác - Lênin, giúp sinh viên hiểu được thế giới quan, phương pháp luận biện chứng duy vật.', true);
+--
+-- -- Môn 2: Kinh tế chính trị Mác - Lênin
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Kinh tế chính trị Mác - Lênin', 2, 'Phân tích những quy luật cơ bản của sản xuất và phân phối trong chủ nghĩa tư bản và chủ nghĩa xã hội từ góc nhìn Mác xít.', true);
+--
+-- -- Môn 3: Chủ nghĩa xã hội khoa học
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Chủ nghĩa xã hội khoa học', 2, 'Trình bày cơ sở lý luận và thực tiễn của sự phát triển lên chủ nghĩa xã hội và chủ nghĩa cộng sản.', true);
+--
+-- -- Môn 4: Lịch sử Đảng Cộng sản Việt Nam
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Lịch sử Đảng Cộng sản Việt Nam', 2, 'Khái quát quá trình hình thành, phát triển và vai trò lãnh đạo của Đảng Cộng sản Việt Nam trong các giai đoạn lịch sử.', true);
+--
+-- -- Môn 5: Tư tưởng Hồ Chí Minh
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Tư tưởng Hồ Chí Minh', 2, 'Nghiên cứu hệ thống tư tưởng chính trị, đạo đức, văn hóa của Chủ tịch Hồ Chí Minh trong sự nghiệp cách mạng Việt Nam.', true);
+--
+-- -- Môn 6: Giáo dục quốc phòng - An ninh
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Giáo dục quốc phòng - An ninh', 3, 'Trang bị kiến thức cơ bản về quốc phòng toàn dân, an ninh quốc gia, kỹ năng quân sự và tự vệ.', true);
+--
+-- -- Môn 7: Giáo dục thể chất
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Giáo dục thể chất', 2, 'Tăng cường sức khỏe, thể lực và kỹ năng vận động cơ bản thông qua các môn thể thao.', true);
+--
+-- -- Môn 8: Tin học đại cương
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Tin học đại cương', 3, 'Cung cấp kiến thức cơ bản về máy tính, hệ điều hành, soạn thảo văn bản, bảng tính, trình chiếu và Internet.', true);
+--
+-- -- Môn 9: Toán cao cấp A1
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Toán cao cấp A1', 3, 'Giới thiệu về hàm số, giới hạn, đạo hàm, tích phân và ứng dụng trong các bài toán kinh tế – kỹ thuật.', true);
+--
+-- -- Môn 10: Toán cao cấp A2
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Toán cao cấp A2', 3, 'Học về ma trận, hệ phương trình tuyến tính, không gian vector và các ứng dụng đại số tuyến tính.', true);
+--
+-- -- Môn 11: Xác suất thống kê
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Xác suất thống kê', 3, 'Trình bày lý thuyết xác suất cơ bản, biến ngẫu nhiên, phân phối xác suất, thống kê mô tả và suy luận thống kê.', true);
+--
+-- -- Môn 12: Vật lý đại cương
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Vật lý đại cương', 3, 'Hệ thống kiến thức cơ bản về cơ học, nhiệt học, điện từ học và quang học, phục vụ cho khối kỹ thuật – công nghệ.', true);
+--
+-- -- Môn 13: Hóa học đại cương
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Hóa học đại cương', 3, 'Cung cấp nền tảng về cấu tạo chất, phản ứng hóa học, dung dịch, điện hóa học và hóa học hữu cơ cơ bản.', true);
+--
+-- -- Môn 14: Sinh học đại cương
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Sinh học đại cương', 3, 'Khái quát cấu trúc và chức năng tế bào, di truyền học, tiến hóa và sinh thái học.', true);
+--
+-- -- Môn 15: Pháp luật đại cương
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Pháp luật đại cương', 2, 'Trang bị kiến thức nền tảng về hệ thống pháp luật Việt Nam và các quyền – nghĩa vụ công dân.', true);
+--
+-- -- Môn 16: Tiếng Anh 1
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Tiếng Anh 1', 3, 'Phát triển kỹ năng nghe, nói, đọc, viết tiếng Anh ở trình độ sơ cấp với chủ đề thông dụng.', true);
+--
+-- -- Môn 17: Tiếng Anh 2
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Tiếng Anh 2', 3, 'Tiếp tục nâng cao năng lực tiếng Anh giao tiếp và học thuật ở trình độ trung cấp.', true);
+--
+-- -- Môn 18: Kỹ năng mềm
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Kỹ năng mềm', 2, 'Phát triển kỹ năng giao tiếp, làm việc nhóm, tư duy phản biện, giải quyết vấn đề và thuyết trình.', true);
+--
+-- -- Môn 19: Kỹ năng làm việc nhóm
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Kỹ năng làm việc nhóm', 2, 'Giúp sinh viên hiểu rõ vai trò, kỹ thuật và các giai đoạn hình thành nhóm hiệu quả.', true);
+--
+-- -- Môn 20: Phương pháp học đại học
+-- INSERT INTO subjects (name, credits, description, active) VALUES
+--     ('Phương pháp học đại học', 1, 'Trang bị cho sinh viên kỹ năng đọc hiểu, ghi chú, tra cứu tài liệu, quản lý thời gian và thi cử.', true);

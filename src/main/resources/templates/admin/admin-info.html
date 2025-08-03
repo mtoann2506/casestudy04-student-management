@@ -27,9 +27,7 @@
     </header>
 
     <div class="sidebar" id="sidebar">
-        <a th:href="@{/admin/panel}" class="sidebar-link home-link">
-            <i class="bi bi-house-door-fill"></i>Trang chủ
-        </a>
+        <a th:href="@{/admin/panel}"><i class="bi bi-house-door-fill"></i>Trang chủ</a>
         <a th:href="@{/admin/info}"><i class="fas fa-user me-2"></i>Tài khoản</a>
         <a th:href="@{/subjects}"><i class="fas fa-book me-2"></i>Môn học</a>
         <a th:href="@{/classes}"><i class="fas fa-chalkboard me-2"></i>Lớp học</a>
@@ -37,30 +35,26 @@
     </div>
 
     <div class="main-content">
-        <h2>Chào mừng, Quản trị viên</h2>
+        <h2>Quản lý tài khoản</h2>
         <div class="grid-container">
-            <a th:href="@{/admin/info}" class="text-decoration-none">
+            <a th:href="@{/admin/info-admin}" class="text-decoration-none">
                 <div class="card p-4">
-                    <h5>Tài khoản</h5>
-                    <p>Quản lý tài khoản, hồ sơ giảng viên và sinh viên</p>
+                    <h5>Tài khoản Admin</h5>
                 </div>
             </a>
-            <a th:href="@{/subjects}" class="text-decoration-none">
+            <a th:href="@{/admin/info-teacher}" class="text-decoration-none">
                 <div class="card p-4">
-                    <h5>Môn học</h5>
-                    <p>Chỉnh sửa môn học, tín chỉ và công thức tính điểm</p>
+                    <h5>Giảng viên</h5>
                 </div>
             </a>
-            <a th:href="@{/classes}" class="text-decoration-none">
+            <a th:href="@{/admin/info-student}" class="text-decoration-none">
                 <div class="card p-4">
-                    <h5>Lớp học</h5>
-                    <p>Phân công môn học, giảng viên, lớp, sinh viên</p>
+                    <h5>Sinh viên</h5>
                 </div>
             </a>
-            <a th:href="@{/grades}" class="text-decoration-none">
+            <a th:href="@{/admin/register}" class="text-decoration-none">
                 <div class="card p-4">
-                    <h5>Điểm số</h5>
-                    <p>Nhập, tính toán và xem điểm của sinh viên</p>
+                    <h5>Thêm mới</h5>
                 </div>
             </a>
         </div>

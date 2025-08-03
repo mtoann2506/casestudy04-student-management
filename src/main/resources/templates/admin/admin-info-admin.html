@@ -16,20 +16,19 @@
             <i class="fas fa-bars"></i>
         </div>
         <div class="user-info">
-            <i class="fas fa-user me-2" onclick="toggleLogoutDropdown()"></i>
+            <i class="fas fa-user me-2" onclick="toggleLogoutDropdown()">
 
             <div id="logoutDropdown" class="logout-dropdown">
                 <form th:action="@{/logout}" method="post">
                     <button type="submit" class="btn btn-sm btn-outline-danger w-100">Logout</button>
                 </form>
             </div>
+            </i>
         </div>
     </header>
 
     <div class="sidebar" id="sidebar">
-        <a th:href="@{/admin/panel}" class="sidebar-link home-link">
-            <i class="bi bi-house-door-fill"></i>Trang chủ
-        </a>
+        <a th:href="@{/admin/panel}"><i class="bi bi-house-door-fill"></i>Trang chủ</a>
         <a th:href="@{/admin/info}"><i class="fas fa-user me-2"></i>Tài khoản</a>
         <a th:href="@{/subjects}"><i class="fas fa-book me-2"></i>Môn học</a>
         <a th:href="@{/classes}"><i class="fas fa-chalkboard me-2"></i>Lớp học</a>
@@ -37,34 +36,43 @@
     </div>
 
     <div class="main-content">
-        <h2>Chào mừng, Quản trị viên</h2>
-        <div class="grid-container">
-            <a th:href="@{/admin/info}" class="text-decoration-none">
-                <div class="card p-4">
-                    <h5>Tài khoản</h5>
-                    <p>Quản lý tài khoản, hồ sơ giảng viên và sinh viên</p>
+        <h2>Thông tin tài khoản Admin</h2>
+
+        <!-- Hiển thị thông báo -->
+        <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="card p-4" style="max-width: 600px;">
+            <form th:action="@{/admin/update-profile}" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" th:value="${admin.email}" required>
                 </div>
-            </a>
-            <a th:href="@{/subjects}" class="text-decoration-none">
-                <div class="card p-4">
-                    <h5>Môn học</h5>
-                    <p>Chỉnh sửa môn học, tín chỉ và công thức tính điểm</p>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Số điện thoại:</label>
+                    <input type="text" class="form-control" id="phone" name="phone" th:value="${admin.phone}" required>
                 </div>
-            </a>
-            <a th:href="@{/classes}" class="text-decoration-none">
-                <div class="card p-4">
-                    <h5>Lớp học</h5>
-                    <p>Phân công môn học, giảng viên, lớp, sinh viên</p>
+                <div class="mb-3">
+                    <label for="password-old" class="form-label">Mật khẩu cũ:</label>
+                    <input type="password" class="form-control" id="password-old" name="passwordOld">
                 </div>
-            </a>
-            <a th:href="@{/grades}" class="text-decoration-none">
-                <div class="card p-4">
-                    <h5>Điểm số</h5>
-                    <p>Nhập, tính toán và xem điểm của sinh viên</p>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mật khẩu mới:</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                    <small class="text-muted">Để trống nếu không muốn thay đổi mật khẩu</small>
                 </div>
-            </a>
+                <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
+                <a th:href="@{/admin/info}" class="btn btn-secondary ms-2">Quay lại</a>
+            </form>
         </div>
     </div>
+
 
     <footer>
         © 2025 Hệ thống Quản lý Sinh viên. All rights reserved.
