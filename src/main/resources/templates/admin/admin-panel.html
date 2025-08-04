@@ -11,6 +11,8 @@
 </head>
 <body>
 <div class="wrapper">
+
+    <!-- Header -->
     <header>
         <div class="menu-toggle" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
@@ -33,7 +35,7 @@
         <a th:href="@{/admin/info}"><i class="fas fa-user me-2"></i>Tài khoản</a>
         <a th:href="@{/subjects}"><i class="fas fa-book me-2"></i>Môn học</a>
         <a th:href="@{/classes}"><i class="fas fa-chalkboard me-2"></i>Lớp học</a>
-        <a th:href="@{/grades}"><i class="fas fa-id-badge me-2"></i>Điểm số</a>
+        <a th:href="@{/admin/grades}"><i class="fas fa-id-badge me-2"></i>Điểm số</a>
     </div>
 
     <div class="main-content">
@@ -57,7 +59,7 @@
                     <p>Phân công môn học, giảng viên, lớp, sinh viên</p>
                 </div>
             </a>
-            <a th:href="@{/grades}" class="text-decoration-none">
+            <a th:href="@{/admin/grades}" class="text-decoration-none">
                 <div class="card p-4">
                     <h5>Điểm số</h5>
                     <p>Nhập, tính toán và xem điểm của sinh viên</p>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch dạy - Giảng viên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/static/teacher/teacher-panel.css}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <header>
+        <div class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="user-info">
+            <i class="fas fa-user me-2" onclick="toggleLogoutDropdown()"></i>
+            <span>Hi, Giảng viên</span>
+            <div id="logoutDropdown" class="logout-dropdown">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-sm btn-outline-danger w-100">Logout</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <a th:href="@{/teacher/dashboard}" class="sidebar-link home-link">
+            <i class="fas fa-home me-2"></i>Trang chủ
+        </a>
+        <a th:href="@{/teacher/profile}"><i class="fas fa-user me-2"></i>Tài khoản cá nhân</a>
+        <a th:href="@{/teacher/classes}"><i class="fas fa-chalkboard-teacher me-2"></i>Lớp đang dạy</a>
+        <a th:href="@{/teacher/grades}"><i class="fas fa-clipboard me-2"></i>Quản lý điểm</a>
+        <a th:href="@{/teacher/schedule}" class="active"><i class="fas fa-calendar-alt me-2"></i>Lịch dạy</a>
+    </div>
+
+    <div class="main-content">
+        <div class="container-fluid">
+            <h2 class="mb-4">
+                <i class="fas fa-calendar-alt me-2"></i>Lịch giảng dạy
+            </h2>
+
+            <!-- Hiển thị thông báo -->
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <span th:text="${message}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="row">
+                <!-- Bộ lọc và điều khiển -->
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-filter me-2"></i>Bộ lọc</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="weekFilter" class="form-label">Tuần</label>
+                                <select class="form-select" id="weekFilter" onchange="loadScheduleByWeek()">
+                                    <option value="current">Tuần hiện tại</option>
+                                    <option value="next">Tuần tới</option>
+                                    <option value="all">Tất cả</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="classFilter" class="form-label">Lớp học</label>
+                                <select class="form-select" id="classFilter" onchange="loadScheduleByClass()">
+                                    <option value="">Tất cả lớp</option>
+                                    <option th:each="class : ${classes}"
+                                            th:value="${class.id}"
+                                            th:text="${class.name}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" onclick="todaySchedule()">
+                                    <i class="fas fa-calendar-day me-1"></i>Hôm nay
+                                </button>
+                                <button class="btn btn-info" onclick="printSchedule()">
+                                    <i class="fas fa-print me-1"></i>In lịch
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thống kê nhanh -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Thống kê tuần</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <small class="text-muted">Tổng số tiết dạy</small>
+                                <h4 class="text-primary">16 tiết</h4>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Số lớp giảng dạy</small>
+                                <h4 class="text-success" th:text="${classes.size()}">3 lớp</h4>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Ngày bận nhất</small>
+                                <h6 class="text-warning">Thứ 3, Thứ 5</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lịch học theo tuần -->
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-calendar-week me-2"></i>Lịch học tuần (14/10 - 20/10/2024)</h5>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-outline-primary btn-sm" onclick="previousWeek()">
+                                    <i class="fas fa-chevron-left"></i> Tuần trước
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm" onclick="nextWeek()">
+                                    Tuần sau <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-bordered mb-0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th style="width: 10%">Tiết</th>
+                                            <th style="width: 15%">Thứ 2</th>
+                                            <th style="width: 15%">Thứ 3</th>
+                                            <th style="width: 15%">Thứ 4</th>
+                                            <th style="width: 15%">Thứ 5</th>
+                                            <th style="width: 15%">Thứ 6</th>
+                                            <th style="width: 15%">Thứ 7</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Tiết 1 (7:00-7:45) -->
+                                        <tr>
+                                            <td class="text-center fw-bold bg-light">
+                                                Tiết 1<br>
+                                                <small>7:00-7:45</small>
+                                            </td>
+                                            <td></td>
+                                            <td class="schedule-cell bg-primary text-white">
+                                                <div class="schedule-item">
+                                                    <strong>Java Programming</strong><br>
+                                                    <small>Lớp: C0924G1</small><br>
+                                                    <small>Phòng: LAB 1</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td class="schedule-cell bg-success text-white">
+                                                <div class="schedule-item">
+                                                    <strong>Spring Boot</strong><br>
+                                                    <small>Lớp: C0824G1</small><br>
+                                                    <small>Phòng: LAB 2</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <!-- Tiết 2 (7:45-8:30) -->
+                                        <tr>
+                                            <td class="text-center fw-bold bg-light">
+                                                Tiết 2<br>
+                                                <small>7:45-8:30</small>
+                                            </td>
+                                            <td></td>
+                                            <td class="schedule-cell bg-primary text-white">
+                                                <div class="schedule-item">
+                                                    <strong>Java Programming</strong><br>
+                                                    <small>Lớp: C0924G1</small><br>
+                                                    <small>Phòng: LAB 1</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td class="schedule-cell bg-success text-white">
+                                                <div class="schedule-item">
+                                                    <strong>Spring Boot</strong><br>
+                                                    <small>Lớp: C0824G1</small><br>
+                                                    <small>Phòng: LAB 2</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <!-- Giờ nghỉ -->
+                                        <tr class="table-secondary">
+                                            <td class="text-center fw-bold">Nghỉ</td>
+                                            <td colspan="6" class="text-center text-muted">8:30 - 8:45</td>
+                                        </tr>
+                                        <!-- Tiết 3 (8:45-9:30) -->
+                                        <tr>
+                                            <td class="text-center fw-bold bg-light">
+                                                Tiết 3<br>
+                                                <small>8:45-9:30</small>
+                                            </td>
+                                            <td class="schedule-cell bg-info text-white">
+                                                <div class="schedule-item">
+                                                    <strong>Database</strong><br>
+                                                    <small>Lớp: C0724G1</small><br>
+                                                    <small>Phòng: 301</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td class="schedule-cell bg-warning text-dark">
+                                                <div class="schedule-item">
+                                                    <strong>Web Design</strong><br>
+                                                    <small>Lớp: C0924G2</small><br>
+                                                    <small>Phòng: LAB 3</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td class="schedule-cell bg-info text-white">
+                                                <div class="schedule-item">
+                                                    <strong>Database</strong><br>
+                                                    <small>Lớp: C0724G1</small><br>
+                                                    <small>Phòng: 301</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <!-- Tiết 4 (9:30-10:15) -->
+                                        <tr>
+                                            <td class="text-center fw-bold bg-light">
+                                                Tiết 4<br>
+                                                <small>9:30-10:15</small>
+                                            </td>
+                                            <td class="schedule-cell bg-info text-white">
+                                                <div class="schedule-item">
+                                                    <strong>Database</strong><br>
+                                                    <small>Lớp: C0724G1</small><br>
+                                                    <small>Phòng: 301</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td class="schedule-cell bg-warning text-dark">
+                                                <div class="schedule-item">
+                                                    <strong>Web Design</strong><br>
+                                                    <small>Lớp: C0924G2</small><br>
+                                                    <small>Phòng: LAB 3</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td class="schedule-cell bg-info text-white">
+                                                <div class="schedule-item">
+                                                    <strong>Database</strong><br>
+                                                    <small>Lớp: C0724G1</small><br>
+                                                    <small>Phòng: 301</small>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <!-- Nghỉ trưa -->
+                                        <tr class="table-warning">
+                                            <td class="text-center fw-bold">Nghỉ trưa</td>
+                                            <td colspan="6" class="text-center">10:15 - 13:30</td>
+                                        </tr>
+                                        <!-- Tiết chiều sẽ tiếp tục... -->
+                                        <tr>
+                                            <td class="text-center fw-bold bg-light">
+                                                Tiết 5<br>
+                                                <small>13:30-14:15</small>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lịch hôm nay -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-calendar-day me-2"></i>Lịch hôm nay (15/10/2024 - Thứ 3)</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="schedule-today-item p-3 border rounded mb-3">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="text-primary">Tiết 1-2: Java Programming</h6>
+                                                <p class="mb-1"><i class="fas fa-clock me-1"></i> 7:00 - 8:30</p>
+                                                <p class="mb-1"><i class="fas fa-chalkboard me-1"></i> Lớp: C0924G1</p>
+                                                <p class="mb-0"><i class="fas fa-map-marker-alt me-1"></i> Phòng: LAB 1</p>
+                                            </div>
+                                            <span class="badge bg-success">Sắp diễn ra</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-coffee fa-3x mb-3"></i>
+                                        <h6>Không có lịch học khác</h6>
+                                        <p>Bạn có thể nghỉ ngơi hoặc chuẩn bị bài giảng.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 Hệ thống Quản lý Sinh viên. All rights reserved.
+    </footer>
+</div>
+
+<style>
+.schedule-cell {
+    padding: 8px !important;
+    vertical-align: middle;
+}
+
+.schedule-item {
+    font-size: 0.85em;
+    line-height: 1.3;
+}
+
+.schedule-today-item {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff !important;
+}
+
+.table td {
+    height: 60px;
+}
+</style>
+
+<script>
+    function toggleLogoutDropdown() {
+        const dropdown = document.getElementById("logoutDropdown");
+        if (dropdown) {
+            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        }
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar) {
+            sidebar.classList.toggle("show");
+        }
+    }
+
+    function loadScheduleByWeek() {
+        const week = document.getElementById('weekFilter').value;
+        // TODO: Load schedule by week via AJAX
+        console.log("Loading schedule for week: " + week);
+    }
+
+    function loadScheduleByClass() {
+        const classId = document.getElementById('classFilter').value;
+        // TODO: Load schedule by class via AJAX
+        console.log("Loading schedule for class: " + classId);
+    }
+
+    function todaySchedule() {
+        // TODO: Scroll to today's schedule
+        alert("Hiển thị lịch hôm nay!");
+    }
+
+    function printSchedule() {
+        window.print();
+    }
+
+    function previousWeek() {
+        // TODO: Load previous week schedule
+        alert("Tính năng đang phát triển!");
+    }
+
+    function nextWeek() {
+        // TODO: Load next week schedule
+        alert("Tính năng đang phát triển!");
+    }
+
+    document.addEventListener("click", function (event) {
+        const userInfo = document.querySelector(".user-info");
+        const dropdown = document.getElementById("logoutDropdown");
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.querySelector(".menu-toggle");
+
+        if (dropdown && userInfo && !userInfo.contains(event.target)) {
+            dropdown.style.display = "none";
+        }
+
+        if (sidebar && !sidebar.contains(event.target) && !toggle.contains(event.target)) {
+            sidebar.classList.remove("show");
+        }
+    });
+</script>
+</body>
+</html>
