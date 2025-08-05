@@ -791,19 +791,52 @@ function saveGradeConfig() {
 
     // Cập nhật header bảng
     const headers = document.querySelectorAll('#gradesTable thead tr:last-child th');
-    headers[4].textContent = `15 phút (${percent15}%)`;
-    headers[5].textContent = `Giữa kỳ (${percentMidterm}%)`;
-    headers[6].textContent = `Chuyên cần (${percentAttendance}%)`;
-    headers[7].textContent = `Cuối kỳ (${percentFinal}%)`;
+    if (headers.length >= 8) {
+        headers[4].textContent = `15 phút (${percent15}%)`;
+        headers[5].textContent = `Giữa kỳ (${percentMidterm}%)`;
+        headers[6].textContent = `Chuyên cần (${percentAttendance}%)`;
+        headers[7].textContent = `Cuối kỳ (${percentFinal}%)`;
+    }
 
-    // Đóng modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('configGradeModal'));
-    modal.hide();
+    // Đóng modal bằng cách sử dụng Bootstrap API
+    const modalElement = document.getElementById('configGradeModal');
+    if (modalElement) {
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            modal.hide();
+        } else {
+            // Fallback: tạo instance mới nếu chưa có
+            const newModal = new bootstrap.Modal(modalElement);
+            newModal.hide();
+        }
+    }
 
     // Refresh bảng để tính lại điểm
     loadGradesByClass();
 
-    alert('Cập nhật cấu hình thành công!');
+    // Hiển thị thông báo thành công
+    showNotification('Cập nhật cấu hình tỷ lệ điểm thành công!', 'success');
+}
+
+// Hàm hiển thị thông báo
+function showNotification(message, type = 'info') {
+    // Tạo thông báo Bootstrap
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Tự động ẩn sau 3 giây
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 3000);
 }
 
 // Xuất Excel

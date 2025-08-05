@@ -20,7 +20,8 @@ public interface ClassRepository extends JpaRepository<Class, Long> {
     
     boolean existsByName(String className);
     
-    boolean existsByNameAndIdNot(String className, Long id);
+    @Query("SELECT COUNT(c) > 0 FROM Class c WHERE c.name = :className AND c.id != :id")
+    boolean existsByNameAndIdNot(@Param("className") String className, @Param("id") Long id);
 
     //Khúc này Nhi thêm để  tạo các query phức tạp cho chúng lấy dữ liệu với relationships
 

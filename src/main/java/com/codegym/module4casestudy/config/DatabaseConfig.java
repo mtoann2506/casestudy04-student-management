@@ -25,7 +25,7 @@ public class DatabaseConfig {
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         ds.setUrl("jdbc:mysql://localhost:3306/student_db?useSSL=false&serverTimezone=UTC");
         ds.setUsername("codegym");
-        ds.setPassword("raisingthebar");
+        ds.setPassword("codegym");
         return ds;
     }
 

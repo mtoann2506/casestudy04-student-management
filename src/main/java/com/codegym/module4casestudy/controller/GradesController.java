@@ -16,7 +16,7 @@ public class GradesController {
     @Autowired
     private ISubjectService subjectService;
 
-    @GetMapping("/admin/grades")
+    @GetMapping("/grades")
     public String viewAdminGrades(Model model) {
         // Truyền dữ liệu classes và subjects cho template
         model.addAttribute("classes", classService.findAll());

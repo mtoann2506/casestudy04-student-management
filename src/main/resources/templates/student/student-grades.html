@@ -17,7 +17,7 @@
         </div>
         <div class="user-info">
             <i class="fas fa-user me-2" onclick="toggleLogoutDropdown()"></i>
-            <span>Hi, Sinh viên</span>
+            <span>Hi, <span th:text="${student != null ? student.fullName : 'Sinh viên'}">Sinh viên</span></span>
             <div id="logoutDropdown" class="logout-dropdown">
                 <form th:action="@{/logout}" method="post">
                     <button type="submit" class="btn btn-sm btn-outline-danger w-100">Logout</button>

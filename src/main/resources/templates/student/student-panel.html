@@ -17,12 +17,21 @@
         </div>
         <div class="user-info">
             <i class="fas fa-user me-2" onclick="toggleLogoutDropdown()"></i>
-            <span>Hi, <span th:text="${student?.fullName ?: 'Sinh viên'}">Sinh viên</span></span>
+            <span>Hi, <span th:text="${student != null ? student.fullName : 'Sinh viên'}">Sinh viên</span></span>
             <div id="logoutDropdown" class="logout-dropdown">
                 <form th:action="@{/logout}" method="post">
                     <button type="submit" class="btn btn-sm btn-outline-danger w-100">Logout</button>
                 </form>
             </div>
+        </div>
+        
+        <!-- Debug info in header -->
+        <div style="position: absolute; top: 60px; right: 20px; background: yellow; padding: 10px; border: 1px solid red; z-index: 1001;">
+            <strong>DEBUG:</strong><br>
+            Student: <span th:text="${student != null ? student.fullName : 'null'}">null</span><br>
+            Total Classes: <span th:text="${totalClasses != null ? totalClasses : 'null'}">null</span><br>
+            Recent Classes: <span th:text="${recentClasses != null ? recentClasses.size() : 'null'}">null</span><br>
+            Error: <span th:text="${error != null ? error : 'none'}">none</span>
         </div>
     </header>
 
@@ -39,7 +48,7 @@
     <div class="main-content">
         <div class="container">
             <h2 class="mb-4">
-                <i class="fas fa-graduation-cap me-2"></i>Chào mừng, <span th:text="${student?.fullName ?: 'Sinh viên'}">Sinh viên</span>
+                <i class="fas fa-graduation-cap me-2"></i>Chào mừng, <span th:text="${student != null ? student.fullName : 'Sinh viên'}">Sinh viên</span>
             </h2>
 
             <!-- Hiển thị thông báo -->
@@ -53,6 +62,16 @@
                 <span th:text="${error}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+            
+            <!-- Debug info -->
+            <div th:if="${error}" class="alert alert-warning" role="alert">
+                <strong>Debug Info:</strong>
+                <p>Student: <span th:text="${student != null ? student.fullName : 'null'}">null</span></p>
+                <p>Total Classes: <span th:text="${totalClasses != null ? totalClasses : 'null'}">null</span></p>
+                <p>Recent Classes: <span th:text="${recentClasses != null ? recentClasses.size() : 'null'}">null</span></p>
+                <p>Error: <span th:text="${error}">null</span></p>
+                <a href="/student/session" class="btn btn-sm btn-info">Check Session</a>
+            </div>
 
             <!-- Thống kê nhanh -->
             <div class="row mb-4">
@@ -62,7 +81,7 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <h6>Lớp đang học</h6>
-                                    <h3 th:text="${totalClasses ?: 0}">0</h3>
+                                    <h3 th:text="${totalClasses != null ? totalClasses : 0}">0</h3>
                                 </div>
                                 <div class="align-self-center">
                                     <i class="fas fa-chalkboard fa-2x"></i>
@@ -197,6 +216,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <a href="/student/dashboard-simple" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm hover-card">
+                            <div class="card-body text-center">
+                                <div class="feature-icon bg-secondary text-white rounded-circle mx-auto mb-3">
+                                    <i class="fas fa-bug fa-2x"></i>
+                                </div>
+                                <h5 class="card-title">Test Simple Dashboard</h5>
+                                <p class="card-text text-muted">Test simplified dashboard version.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
 
             <!-- Lớp học gần đây -->
@@ -205,7 +237,7 @@
                     <h4 class="mb-3"><i class="fas fa-clock me-2"></i>Lớp học gần đây</h4>
                     <div class="card">
                         <div class="card-body">
-                            <div th:if="${#lists.isEmpty(recentClasses)}" class="text-center py-4">
+                            <div th:if="${recentClasses == null or #lists.isEmpty(recentClasses)}" class="text-center py-4">
                                 <i class="fas fa-chalkboard fa-3x text-muted mb-3"></i>
                                 <h5 class="text-muted">Chưa có lớp học nào</h5>
                                 <p class="text-muted">Hãy đăng ký lớp học để bắt đầu học tập.</p>
@@ -214,18 +246,18 @@
                                 </a>
                             </div>
 
-                            <div th:if="${!#lists.isEmpty(recentClasses)}" class="row">
+                            <div th:if="${recentClasses != null and !#lists.isEmpty(recentClasses)}" class="row">
                                 <div th:each="class : ${recentClasses}" class="col-md-4 mb-3">
                                     <div class="card border-left-primary">
                                         <div class="card-body">
-                                            <h6 class="card-title text-primary" th:text="${class.name}">Tên lớp</h6>
+                                            <h6 class="card-title text-primary" th:text="${class != null ? class.name : 'Tên lớp'}">Tên lớp</h6>
                                             <p class="card-text mb-1">
                                                 <i class="fas fa-book me-1"></i>
-                                                <span th:text="${class.subject?.name ?: 'Chưa xác định'}">Môn học</span>
+                                                <span th:text="${class != null and class.subject != null ? class.subject.name : 'Chưa xác định'}">Môn học</span>
                                             </p>
                                             <p class="card-text mb-0">
                                                 <i class="fas fa-clock me-1"></i>
-                                                <span th:text="${class.schedule ?: 'Chưa có lịch'}">Lịch học</span>
+                                                <span th:text="${class != null ? class.schedule : 'Chưa có lịch'}">Lịch học</span>
                                             </p>
                                         </div>
                                     </div>
@@ -272,7 +304,10 @@
 </style>
 
 <script>
+    console.log("Student panel script loaded");
+    
     function toggleLogoutDropdown() {
+        console.log("Toggle logout dropdown called");
         const dropdown = document.getElementById("logoutDropdown");
         if (dropdown) {
             dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
@@ -280,11 +315,21 @@
     }
 
     function toggleSidebar() {
+        console.log("Toggle sidebar called");
         const sidebar = document.getElementById("sidebar");
         if (sidebar) {
             sidebar.classList.toggle("show");
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("DOM loaded for student panel");
+        console.log("Student data:", {
+            student: document.querySelector('[th\\:text*="student.fullName"]')?.textContent,
+            totalClasses: document.querySelector('[th\\:text*="totalClasses"]')?.textContent,
+            recentClasses: document.querySelectorAll('[th\\:each="class : ${recentClasses}"]').length
+        });
+    });
 
     document.addEventListener("click", function (event) {
         const userInfo = document.querySelector(".user-info");

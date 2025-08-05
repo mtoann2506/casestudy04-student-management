@@ -26,6 +26,7 @@ public class Class {
         this.active = active;
     }
 
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
@@ -104,4 +105,5 @@ public class Class {
                 ", description='" + description + '\'' +
                 '}';
     }
+
 }

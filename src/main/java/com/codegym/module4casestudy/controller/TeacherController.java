@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -40,15 +41,29 @@ public class TeacherController {
     // Helper method để lấy thông tin giảng viên hiện tại
     private User getCurrentTeacher() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            System.out.println("DEBUG: Authentication is null");
+            return null;
+        }
+        
         String username = auth.getName();
-        return userService.findByUsername(username).orElse(null);
+        System.out.println("DEBUG: Current username: " + username);
+        
+        User teacher = userService.findByUsername(username).orElse(null);
+        if (teacher == null) {
+            System.out.println("DEBUG: Teacher not found for username: " + username);
+        } else {
+            System.out.println("DEBUG: Teacher found: " + teacher.getFullName() + " (ID: " + teacher.getId() + ")");
+        }
+        
+        return teacher;
     }
 
     @GetMapping("/dashboard")
     public String showTeacherDashboard(Model model) {
         User teacher = getCurrentTeacher();
         if (teacher == null) {
-            model.addAttribute("error", "Không tìm thấy thông tin giảng viên!");
+            model.addAttribute("error", "Không tìm thấy thông tin giảng viên! Vui lòng đăng nhập lại.");
             return "redirect:/login";
         }
 
@@ -61,12 +76,31 @@ public class TeacherController {
         return "teacher/teacher-panel";
     }
 
+    @GetMapping("/debug")
+    public String debugTeacher(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User teacher = getCurrentTeacher();
+        
+        model.addAttribute("auth", auth);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("authName", auth != null ? auth.getName() : "null");
+        model.addAttribute("authDetails", auth != null ? auth.getDetails() : "null");
+        model.addAttribute("authAuthorities", auth != null ? auth.getAuthorities() : "null");
+        
+        return "teacher/teacher-debug";
+    }
+
     @GetMapping("/profile")
     public String showTeacherProfile(Model model) {
         User teacher = getCurrentTeacher();
         if (teacher == null) {
-            model.addAttribute("error", "Không tìm thấy thông tin giảng viên!");
-            return "redirect:/login";
+            model.addAttribute("error", "Không tìm thấy thông tin giảng viên! Vui lòng đăng nhập lại.");
+            // Thêm một teacher mẫu để template không bị lỗi
+            teacher = new User();
+            teacher.setUsername("Unknown");
+            teacher.setFullName("Không xác định");
+            teacher.setEmail("");
+            teacher.setPhone("");
         }
 
         model.addAttribute("teacher", teacher);
@@ -176,6 +210,35 @@ public class TeacherController {
         model.addAttribute("subjects", subjects);
 
         return "teacher/teacher-grades";
+    }
+
+    // Thêm endpoint để lấy điểm của sinh viên
+    @GetMapping("/grades/class/{classId}")
+    @ResponseBody
+    public String getGradesByClass(@PathVariable Long classId) {
+        try {
+            // TODO: Implement logic to get grades for specific class
+            return "success";
+        } catch (Exception e) {
+            return "error";
+        }
+    }
+
+    // Thêm endpoint để cập nhật điểm
+    @PostMapping("/grades/update")
+    @ResponseBody
+    public String updateGrade(@RequestParam Long studentId, 
+                            @RequestParam Long subjectId,
+                            @RequestParam Double grade15,
+                            @RequestParam Double gradeMidterm,
+                            @RequestParam Double gradeAttendance,
+                            @RequestParam Double gradeFinal) {
+        try {
+            // TODO: Implement logic to update grades
+            return "success";
+        } catch (Exception e) {
+            return "error";
+        }
     }
 
     @GetMapping("/schedule")

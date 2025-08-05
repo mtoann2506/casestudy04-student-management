@@ -11,9 +11,11 @@ import com.codegym.module4casestudy.service.ISubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -68,22 +70,50 @@ public class ClassController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("classEntity", new Class());
+        // Thêm dữ liệu cần thiết cho form
+        model.addAttribute("allStudents", userService.findByRole(Role.STUDENT));
+        model.addAttribute("allTeachers", userService.findByRole(Role.TEACHER));
+        model.addAttribute("allSubjects", subjectService.findAll());
         return "admin/admin-class-form";
     }
 
     @PostMapping("/new")
-    public String createClass(@ModelAttribute Class classEntity, RedirectAttributes redirectAttributes) {
+    public String createClass(@Valid @ModelAttribute Class classEntity, 
+                            BindingResult bindingResult, 
+                            RedirectAttributes redirectAttributes,
+                            Model model) {
         try {
+            // Validation
+            if (bindingResult.hasErrors()) {
+                // Thêm lại dữ liệu cần thiết cho form
+                model.addAttribute("allStudents", userService.findByRole(Role.STUDENT));
+                model.addAttribute("allTeachers", userService.findByRole(Role.TEACHER));
+                model.addAttribute("allSubjects", subjectService.findAll());
+                return "admin/admin-class-form";
+            }
+
             // Kiểm tra tên lớp học đã tồn tại chưa
             if (classService.existsByName(classEntity.getName())) {
                 redirectAttributes.addFlashAttribute("error", "Tên lớp học đã tồn tại!");
-                return "redirect:/classes/new";
+                model.addAttribute("allStudents", userService.findByRole(Role.STUDENT));
+                model.addAttribute("allTeachers", userService.findByRole(Role.TEACHER));
+                model.addAttribute("allSubjects", subjectService.findAll());
+                return "admin/admin-class-form";
+            }
+
+            // Đảm bảo trạng thái active được set
+            if (classEntity.isActive() == null) {
+                classEntity.setActive(true);
             }
 
             classService.save(classEntity);
             redirectAttributes.addFlashAttribute("message", "Thêm lớp học thành công!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi thêm lớp học!");
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi thêm lớp học: " + e.getMessage());
+            model.addAttribute("allStudents", userService.findByRole(Role.STUDENT));
+            model.addAttribute("allTeachers", userService.findByRole(Role.TEACHER));
+            model.addAttribute("allSubjects", subjectService.findAll());
+            return "admin/admin-class-form";
         }
         return "redirect:/classes";
     }
@@ -112,12 +142,30 @@ public class ClassController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateClass(@PathVariable Long id, @ModelAttribute Class classEntity, RedirectAttributes redirectAttributes) {
+    public String updateClass(@PathVariable Long id, 
+                            @Valid @ModelAttribute Class classEntity, 
+                            BindingResult bindingResult,
+                            RedirectAttributes redirectAttributes,
+                            Model model) {
         try {
+            // Validation
+            if (bindingResult.hasErrors()) {
+                // Thêm lại dữ liệu cần thiết cho form
+                model.addAttribute("allStudents", userService.findByRole(Role.STUDENT));
+                model.addAttribute("allTeachers", userService.findByRole(Role.TEACHER));
+                model.addAttribute("allSubjects", subjectService.findAll());
+                model.addAttribute("classSubjects", classService.getClassSubjects(id));
+                return "admin/admin-class-form";
+            }
+
             // Kiểm tra tên lớp học đã tồn tại chưa (trừ chính nó)
             if (classService.existsByNameAndIdNot(classEntity.getName(), id)) {
                 redirectAttributes.addFlashAttribute("error", "Tên lớp học đã tồn tại!");
-                return "redirect:/classes/edit/" + id;
+                model.addAttribute("allStudents", userService.findByRole(Role.STUDENT));
+                model.addAttribute("allTeachers", userService.findByRole(Role.TEACHER));
+                model.addAttribute("allSubjects", subjectService.findAll());
+                model.addAttribute("classSubjects", classService.getClassSubjects(id));
+                return "admin/admin-class-form";
             }
 
             Class existingClass = classService.findById(id).orElse(null);
@@ -128,11 +176,17 @@ public class ClassController {
 
             existingClass.setName(classEntity.getName());
             existingClass.setDescription(classEntity.getDescription());
+            existingClass.setActive(classEntity.isActive());
 
             classService.save(existingClass);
             redirectAttributes.addFlashAttribute("message", "Cập nhật lớp học thành công!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật lớp học!");
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật lớp học: " + e.getMessage());
+            model.addAttribute("allStudents", userService.findByRole(Role.STUDENT));
+            model.addAttribute("allTeachers", userService.findByRole(Role.TEACHER));
+            model.addAttribute("allSubjects", subjectService.findAll());
+            model.addAttribute("classSubjects", classService.getClassSubjects(id));
+            return "admin/admin-class-form";
         }
         return "redirect:/classes";
     }

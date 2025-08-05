@@ -162,8 +162,9 @@
                                 </span>
                             </p>
                             <p class="card-text">
-                                <strong>Ngày tạo:</strong>
-                                <span th:text="${#temporals.format(teacher.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                <strong>Trạng thái:</strong>
+                                <span class="badge bg-success" th:if="${teacher.enabled}">Hoạt động</span>
+                                <span class="badge bg-danger" th:unless="${teacher.enabled}">Không hoạt động</span>
                             </p>
                         </div>
                     </div>
@@ -204,6 +205,59 @@
 
         if (sidebar && !sidebar.contains(event.target) && !toggle.contains(event.target)) {
             sidebar.classList.remove("show");
+        }
+    });
+
+    // Thêm validation cho form
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const passwordOld = document.getElementById('passwordOld').value;
+                const password = document.getElementById('password').value;
+
+                // Validation
+                if (!fullName || fullName.length < 2) {
+                    event.preventDefault();
+                    alert('Họ tên phải có ít nhất 2 ký tự!');
+                    return;
+                }
+
+                if (!email || !email.includes('@')) {
+                    event.preventDefault();
+                    alert('Email không hợp lệ!');
+                    return;
+                }
+
+                if (!phone || phone.length < 10) {
+                    event.preventDefault();
+                    alert('Số điện thoại không hợp lệ!');
+                    return;
+                }
+
+                // Kiểm tra mật khẩu
+                if (password && !passwordOld) {
+                    event.preventDefault();
+                    alert('Vui lòng nhập mật khẩu cũ khi đổi mật khẩu!');
+                    return;
+                }
+
+                if (password && password.length < 6) {
+                    event.preventDefault();
+                    alert('Mật khẩu mới phải có ít nhất 6 ký tự!');
+                    return;
+                }
+
+                // Hiển thị loading
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang cập nhật...';
+                    submitBtn.disabled = true;
+                }
+            });
         }
     });
 </script>

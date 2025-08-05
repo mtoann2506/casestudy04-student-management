@@ -62,7 +62,12 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Tên lớp học <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                                    <input type="text" class="form-control" id="name" th:field="*{name}" required 
+                                           minlength="2" maxlength="100" pattern="[A-Za-z0-9\s\-_]+"
+                                           title="Tên lớp học chỉ được chứa chữ cái, số, dấu cách, gạch ngang và gạch dưới">
+                                    <div class="invalid-feedback">
+                                        Vui lòng nhập tên lớp học hợp lệ (2-100 ký tự)
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -78,7 +83,11 @@
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Mô tả</label>
-                            <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+                            <textarea class="form-control" id="description" th:field="*{description}" rows="3" 
+                                      maxlength="500" placeholder="Nhập mô tả về lớp học (tối đa 500 ký tự)"></textarea>
+                            <div class="form-text">
+                                <span id="charCount">0</span>/500 ký tự
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -522,11 +531,69 @@
         }
     });
 
-    // Debug function để kiểm tra
+    // Form validation và UX improvements
     document.addEventListener('DOMContentLoaded', function() {
         console.log('=== Admin class form loaded ===');
         console.log('Class ID:', classId);
         console.log('Context Path:', contextPath);
+
+        // Character counter cho description
+        const descriptionTextarea = document.getElementById('description');
+        const charCountSpan = document.getElementById('charCount');
+        
+        if (descriptionTextarea && charCountSpan) {
+            // Cập nhật số ký tự ban đầu
+            charCountSpan.textContent = descriptionTextarea.value.length;
+            
+            // Cập nhật khi người dùng nhập
+            descriptionTextarea.addEventListener('input', function() {
+                charCountSpan.textContent = this.value.length;
+                
+                // Đổi màu khi gần đạt giới hạn
+                if (this.value.length > 450) {
+                    charCountSpan.style.color = 'red';
+                } else if (this.value.length > 400) {
+                    charCountSpan.style.color = 'orange';
+                } else {
+                    charCountSpan.style.color = 'inherit';
+                }
+            });
+        }
+
+        // Form validation
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                const nameInput = document.getElementById('name');
+                const name = nameInput.value.trim();
+                
+                if (!name || name.length < 2) {
+                    event.preventDefault();
+                    nameInput.classList.add('is-invalid');
+                    showNotification('Vui lòng nhập tên lớp học hợp lệ!', 'danger');
+                    return;
+                }
+                
+                // Kiểm tra pattern
+                const pattern = /^[A-Za-z0-9\s\-_]+$/;
+                if (!pattern.test(name)) {
+                    event.preventDefault();
+                    nameInput.classList.add('is-invalid');
+                    showNotification('Tên lớp học chỉ được chứa chữ cái, số, dấu cách, gạch ngang và gạch dưới!', 'danger');
+                    return;
+                }
+                
+                nameInput.classList.remove('is-invalid');
+            });
+        }
+
+        // Remove invalid class khi user bắt đầu nhập
+        const nameInput = document.getElementById('name');
+        if (nameInput) {
+            nameInput.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+            });
+        }
 
         // Kiểm tra modal buttons
         const addStudentBtn = document.querySelector('[data-bs-target="#addStudentModal"]');
@@ -565,6 +632,27 @@
             });
         }
     });
+
+    // Hàm hiển thị thông báo
+    function showNotification(message, type = 'info') {
+        // Tạo thông báo Bootstrap
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alertDiv);
+        
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.remove();
+            }
+        }, 3000);
+    }
 </script>
 
 </body>

@@ -33,6 +33,11 @@ public class DashboardController {
         return "admin/admin-info";
     }
 
+    @GetMapping("/admin/grades")
+    public String adminGrades() {
+        return "redirect:/grades";
+    }
+
     @GetMapping("/admin/info-admin")
     public String adminInfoAdmin(Model model) {
         // Lấy thông tin admin hiện tại
@@ -211,7 +216,7 @@ public class DashboardController {
 
     @GetMapping("/student/panel")
     public String studentPanel() {
-        return "student/student-panel";
+        return "redirect:/student/dashboard";
     }
 
     @GetMapping("/dashboard")

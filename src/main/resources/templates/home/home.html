@@ -7,10 +7,75 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/static/home/home.css}">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .stats-section {
+            background: #f8f9fa;
+            padding: 60px 0;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .btn-custom {
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
 <!-- Hiển thị thông báo logout nếu có -->
-<div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+<div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show position-fixed" style="top: 20px; right: 20px; z-index: 9999;" role="alert">
     <i class="bi bi-check-circle"></i> Bạn đã đăng xuất thành công!
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
@@ -22,73 +87,99 @@
     </div>
 </div>
 
-<header class="text-center">
+<!-- Hero Section -->
+<section class="hero-section">
     <div class="container">
-        <h1 class="display-4">Hệ Thống Quản Lý Sinh Viên</h1>
-        <p class="lead">Quản lý sinh viên, khoá học và giảng viên một cách dễ dàng, hiệu quả.</p>
-        <div class="mt-4">
-            <a th:href="@{/login}" class="btn btn-primary btn-lg me-3">
-                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập hệ thống
+        <h1 class="display-3 fw-bold mb-4">Hệ Thống Quản Lý Sinh Viên</h1>
+        <p class="lead mb-5">Quản lý sinh viên, khoá học và giảng viên một cách dễ dàng, hiệu quả với công nghệ hiện đại.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a th:href="@{/login}" class="btn btn-light btn-custom">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Đăng nhập hệ thống
             </a>
-<!--            <a th:href="@{/register}" class="btn btn-outline-secondary btn-lg">-->
-<!--                <i class="bi bi-person-plus"></i> Đăng ký tài khoản-->
-<!--            </a>-->
+            <a href="#features" class="btn btn-outline-light btn-custom">
+                <i class="bi bi-info-circle me-2"></i> Tìm hiểu thêm
+            </a>
         </div>
     </div>
-</header>
+</section>
 
-<div id="carouselExampleIndicators" class="carousel slide">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="https://media.istockphoto.com/id/1212064060/vi/anh/l%C6%B0%E1%BB%9Bi-lu%E1%BB%93ng-d%E1%BB%AF-li%E1%BB%87u-abs-hologram.jpg?s=612x612&w=0&k=20&c=2IRs6J1TRCQUMzxuPfRK-lyuFKwSKswC8F-Bid526iw=" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="https://media.istockphoto.com/id/1212064060/vi/anh/l%C6%B0%E1%BB%9Bi-lu%E1%BB%93ng-d%E1%BB%AF-li%E1%BB%87u-abs-hologram.jpg?s=612x612&w=0&k=20&c=2IRs6J1TRCQUMzxuPfRK-lyuFKwSKswC8F-Bid526iw=" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="https://media.istockphoto.com/id/1212064060/vi/anh/l%C6%B0%E1%BB%9Bi-lu%E1%BB%93ng-d%E1%BB%AF-li%E1%BB%87u-abs-hologram.jpg?s=612x612&w=0&k=20&c=2IRs6J1TRCQUMzxuPfRK-lyuFKwSKswC8F-Bid526iw=" class="d-block w-100" alt="...">
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
-
-<section class="py-5">
+<!-- Features Section -->
+<section id="features" class="py-5">
     <div class="container">
-        <h2 class="text-center mb-5">Chức năng chính</h2>
-        <div class="row text-center">
+        <h2 class="text-center mb-5 display-5 fw-bold">Chức năng chính</h2>
+        <div class="row g-4">
             <div class="col-md-4">
-                <div class="feature-icon mb-3">👨‍🎓</div>
-                <h5>Quản lý sinh viên</h5>
-                <p>Thêm, sửa, xoá và theo dõi tiến độ học tập của sinh viên.</p>
+                <div class="feature-card">
+                    <i class="bi bi-people-fill feature-icon text-primary"></i>
+                    <h5 class="fw-bold mb-3">Quản lý sinh viên</h5>
+                    <p class="text-muted">Thêm, sửa, xoá và theo dõi tiến độ học tập của sinh viên một cách chi tiết và hiệu quả.</p>
+                </div>
             </div>
             <div class="col-md-4">
-                <div class="feature-icon mb-3">📚</div>
-                <h5>Quản lý khoá học</h5>
-                <p>Tạo môn học, sắp xếp thời khoá biểu và giảng viên phụ trách.</p>
+                <div class="feature-card">
+                    <i class="bi bi-book-fill feature-icon text-success"></i>
+                    <h5 class="fw-bold mb-3">Quản lý khoá học</h5>
+                    <p class="text-muted">Tạo môn học, sắp xếp thời khoá biểu và phân công giảng viên phụ trách một cách linh hoạt.</p>
+                </div>
             </div>
             <div class="col-md-4">
-                <div class="feature-icon mb-3">🧑‍🏫</div>
-                <h5>Phân quyền người dùng</h5>
-                <p>Phân quyền rõ ràng giữa admin, giảng viên và sinh viên.</p>
+                <div class="feature-card">
+                    <i class="bi bi-shield-check feature-icon text-warning"></i>
+                    <h5 class="fw-bold mb-3">Phân quyền người dùng</h5>
+                    <p class="text-muted">Phân quyền rõ ràng giữa admin, giảng viên và sinh viên với bảo mật cao.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <p class="text-muted">Sinh viên</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <p class="text-muted">Giảng viên</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">30+</div>
+                    <p class="text-muted">Môn học</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">20+</div>
+                    <p class="text-muted">Lớp học</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="display-5 fw-bold mb-4">Sẵn sàng bắt đầu?</h2>
+        <p class="lead mb-5">Tham gia hệ thống quản lý sinh viên hiện đại ngay hôm nay!</p>
+        <a th:href="@{/login}" class="btn btn-light btn-custom">
+            <i class="bi bi-box-arrow-in-right me-2"></i> Đăng nhập ngay
+        </a>
+    </div>
+</section>
+
 <footer class="text-center py-4 bg-dark text-light">
-    <p>©2025 Hệ thống Quản lý Sinh viên. All rights reserved.</p>
+    <div class="container">
+        <p class="mb-0">©2025 Hệ thống Quản lý Sinh viên. All rights reserved.</p>
+    </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
