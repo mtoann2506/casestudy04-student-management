@@ -1,6 +1,5 @@
 package com.codegym.module4casestudy.config;
 
-import com.codegym.module4casestudy.model.Role;
 import com.codegym.module4casestudy.model.User;
 import com.codegym.module4casestudy.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;

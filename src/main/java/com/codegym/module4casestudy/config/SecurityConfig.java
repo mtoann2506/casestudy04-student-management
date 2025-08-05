@@ -46,7 +46,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         System.out.println("=== Configuring HTTP security ===");
         http
-            .authorizeRequests(authz -> authz
+            .authorizeRequests()
                 .antMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/", "/home", "/login", "/register").permitAll()
@@ -54,20 +54,20 @@ public class SecurityConfig {
                 .antMatchers("/teacher/**").hasRole("TEACHER")
                 .antMatchers("/student/**").hasRole("STUDENT")
                 .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
+            .and()
+            .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .successHandler(customAuthenticationSuccessHandler)
                 .failureUrl("/login?error=true")
                 .permitAll()
-            )
-            .logout(logout -> logout
+            .and()
+            .logout()
                 .logoutSuccessUrl("/?logout=true")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll()
-            )
+            .and()
             .csrf().disable(); // Tạm thời disable CSRF cho dễ test
 
         System.out.println("HTTP security configured successfully");

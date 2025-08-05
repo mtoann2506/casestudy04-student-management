@@ -20,11 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
 import java.util.stream.Collectors;
->>>>>>> 97fe5a6 (fix schedule)
 
 @Controller
 @RequestMapping("/student")
@@ -122,17 +119,6 @@ public class StudentController {
             
             return "student/student-panel";
         }
-<<<<<<< HEAD
-=======
-
-        // Lấy các lớp mà student đã đăng ký
-        List<Class> studentClasses = classService.findClassesByStudentId(student.getId());
-        model.addAttribute("student", student);
-        model.addAttribute("totalClasses", studentClasses.size());
-        model.addAttribute("recentClasses", studentClasses.size() > 3 ? studentClasses.subList(0, 3) : studentClasses);
-
-        return "student/student-panel";
->>>>>>> 97fe5a6 (fix schedule)
     }
 
     @GetMapping("/dashboard-simple")
