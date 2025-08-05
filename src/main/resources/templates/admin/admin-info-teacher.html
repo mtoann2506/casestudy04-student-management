@@ -61,7 +61,7 @@
                 <td th:text="${teacher.email}"></td>
                 <td th:text="${teacher.phone}"></td>
                 <td>
-                    <span class="password-field" th:data-password="${teacherPasswords[teacher.username]}">••••••••</span>
+                    <span class="password-field" th:data-password="${defaultPassword}">••••••••</span>
                     <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="togglePassword(this)">
                         <i class="fas fa-eye"></i>
                     </button>

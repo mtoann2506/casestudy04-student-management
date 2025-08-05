@@ -36,13 +36,14 @@
     </header>
 
     <div class="sidebar" id="sidebar">
-        <a th:href="@{/student/dashboard}" class="sidebar-link home-link">
+        <a th:href="@{/student/dashboard}" class="sidebar-link home-link active">
             <i class="fas fa-home me-2"></i>Trang chủ
         </a>
         <a th:href="@{/student/profile}"><i class="fas fa-user-edit me-2"></i>Tài khoản cá nhân</a>
         <a th:href="@{/student/classes}"><i class="fas fa-chalkboard me-2"></i>Lớp học của tôi</a>
         <a th:href="@{/student/grades}"><i class="fas fa-graduation-cap me-2"></i>Điểm số</a>
-        <a th:href="@{/student/schedule}"><i class="fas fa-calendar-alt me-2"></i>Lịch học</a>
+<!--        <a th:href="@{/student/schedule}"><i class="fas fa-calendar-alt me-2"></i>Lịch học</a>-->
+        <a href="#" onclick="showComingSoon('Lịch học')" class="text-muted"><i class="fas fa-calendar-alt me-2"></i>Lịch học <span class="badge bg-danger ms-1 small">Sắp có</span></a>
     </div>
 
     <div class="main-content">
@@ -322,6 +323,7 @@
         }
     }
 
+<<<<<<< HEAD
     document.addEventListener("DOMContentLoaded", function() {
         console.log("DOM loaded for student panel");
         console.log("Student data:", {
@@ -330,6 +332,11 @@
             recentClasses: document.querySelectorAll('[th\\:each="class : ${recentClasses}"]').length
         });
     });
+=======
+    function showComingSoon(feature) {
+        alert("Chức năng '" + feature + "' hiện đang được phát triển. Vui lòng quay lại sau.");
+    }
+>>>>>>> 97fe5a6 (fix schedule)
 
     document.addEventListener("click", function (event) {
         const userInfo = document.querySelector(".user-info");

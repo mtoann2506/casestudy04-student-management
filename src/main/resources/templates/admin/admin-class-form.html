@@ -6,8 +6,107 @@
     <title>Quản lý lớp học</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/static/admin/admin-panel.css}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Inline CSS để tránh 404 -->
+    <style>
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: #343a40;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .menu-toggle {
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            position: fixed;
+            left: -250px;
+            top: 0;
+            height: 100vh;
+            transition: left 0.3s;
+            z-index: 1000;
+            padding-top: 60px;
+        }
+        
+        .sidebar.show {
+            left: 0;
+        }
+        
+        .sidebar a {
+            display: block;
+            padding: 1rem;
+            color: #495057;
+            text-decoration: none;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .sidebar a:hover {
+            background: #e9ecef;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .user-info {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .logout-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0.5rem;
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        
+        footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+    </style>
+    
+    <!-- JavaScript functions -->
+    <script>
+        function toggleLogoutDropdown() {
+            const dropdown = document.getElementById("logoutDropdown");
+            if (dropdown) {
+                dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            if (sidebar) {
+                sidebar.classList.toggle("show");
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -106,7 +205,7 @@
             </div>
 
             <!-- Quản lý sinh viên, giảng viên, môn học (chỉ hiển thị khi edit) -->
-            <div th:if="${classEntity.id != null}">
+            <div th:if="${classEntity != null and classEntity.id != null and classEntity.id > 0}">
 
                 <!-- Quản lý sinh viên -->
                 <div class="card mb-4">
@@ -141,7 +240,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                                <tr th:if="${#sets.isEmpty(classEntity.students)}">
+                                <tr th:if="${classEntity.students == null or #sets.isEmpty(classEntity.students)}">
                                     <td colspan="5" class="text-center text-muted">Chưa có sinh viên nào trong lớp</td>
                                 </tr>
                                 </tbody>
@@ -183,7 +282,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                                <tr th:if="${#sets.isEmpty(classEntity.teachers)}">
+                                <tr th:if="${classEntity.teachers == null or #sets.isEmpty(classEntity.teachers)}">
                                     <td colspan="5" class="text-center text-muted">Chưa có giảng viên nào trong lớp</td>
                                 </tr>
                                 </tbody>
@@ -225,7 +324,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                                <tr th:if="${#lists.isEmpty(classSubjects)}">
+                                <tr th:if="${classSubjects == null or #lists.isEmpty(classSubjects)}">
                                     <td colspan="5" class="text-center text-muted">Chưa có phân công môn học nào</td>
                                 </tr>
                                 </tbody>
@@ -258,7 +357,7 @@
                         <option th:each="student : ${allStudents}"
                                 th:value="${student.id}"
                                 th:text="${student.fullName + ' (' + student.email + ')'}"
-                                th:if="${allStudents != null and !classEntity.students.contains(student)}">
+                                th:if="${allStudents != null and (classEntity.students == null or !classEntity.students.contains(student))}">
                         </option>
                     </select>
                 </div>
@@ -287,7 +386,7 @@
                         <option th:each="teacher : ${allTeachers}"
                                 th:value="${teacher.id}"
                                 th:text="${teacher.fullName + ' (' + teacher.email + ')'}"
-                                th:if="${allTeachers != null and !classEntity.teachers.contains(teacher)}">
+                                th:if="${allTeachers != null and (classEntity.teachers == null or !classEntity.teachers.contains(teacher))}">
                         </option>
                     </select>
                 </div>
@@ -506,13 +605,6 @@
         const dropdown = document.getElementById("logoutDropdown");
         if (dropdown) {
             dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
-        }
-    }
-
-    function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        if (sidebar) {
-            sidebar.classList.toggle("show");
         }
     }
 

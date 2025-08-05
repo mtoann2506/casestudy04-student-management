@@ -67,8 +67,8 @@ public class TeacherController {
             return "redirect:/login";
         }
 
-        // Thống kê cơ bản cho dashboard
-        List<Class> teachingClasses = classService.findAll(); // Tạm thời lấy tất cả, sẽ filter sau
+        // Lấy các lớp mà teacher phụ trách
+        List<Class> teachingClasses = classService.findClassesByTeacherId(teacher.getId());
         model.addAttribute("teacher", teacher);
         model.addAttribute("totalClasses", teachingClasses.size());
         model.addAttribute("recentClasses", teachingClasses.size() > 3 ? teachingClasses.subList(0, 3) : teachingClasses);
@@ -166,8 +166,8 @@ public class TeacherController {
             return "redirect:/login";
         }
 
-        // Tạm thời lấy tất cả lớp, sau sẽ filter theo teacher
-        List<Class> teachingClasses = classService.findAll();
+        // Lấy các lớp mà teacher phụ trách
+        List<Class> teachingClasses = classService.findClassesByTeacherId(teacher.getId());
         model.addAttribute("teacher", teacher);
         model.addAttribute("classes", teachingClasses);
 
@@ -187,6 +187,15 @@ public class TeacherController {
             return "redirect:/teacher/classes";
         }
 
+        // Kiểm tra xem teacher có phụ trách lớp này không
+        List<Class> teachingClasses = classService.findClassesByTeacherId(teacher.getId());
+        boolean isTeaching = teachingClasses.stream().anyMatch(c -> c.getId().equals(classId));
+
+        if (!isTeaching) {
+            model.addAttribute("error", "Bạn không phụ trách lớp này!");
+            return "redirect:/teacher/classes";
+        }
+
         model.addAttribute("teacher", teacher);
         model.addAttribute("class", teachingClass);
         // Tạm thời comment out students vì chưa có relationship
@@ -202,7 +211,8 @@ public class TeacherController {
             return "redirect:/login";
         }
 
-        List<Class> teachingClasses = classService.findAll();
+        // Lấy các lớp mà teacher phụ trách
+        List<Class> teachingClasses = classService.findClassesByTeacherId(teacher.getId());
         List<Subject> subjects = subjectService.findActiveSubjects();
 
         model.addAttribute("teacher", teacher);
@@ -248,7 +258,8 @@ public class TeacherController {
             return "redirect:/login";
         }
 
-        List<Class> teachingClasses = classService.findAll();
+        // Lấy các lớp mà teacher phụ trách
+        List<Class> teachingClasses = classService.findClassesByTeacherId(teacher.getId());
         model.addAttribute("teacher", teacher);
         model.addAttribute("classes", teachingClasses);
 

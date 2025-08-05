@@ -46,4 +46,9 @@ public interface IClassService {
     void assignTeacherToSubject(Long classId, Long subjectId, Long teacherId);
 
     void removeTeacherFromSubject(Long classId, Long subjectId, Long teacherId);
+
+    // Tìm lớp học theo student/teacher
+    List<Class> findClassesByStudentId(Long studentId);
+
+    List<Class> findClassesByTeacherId(Long teacherId);
 }

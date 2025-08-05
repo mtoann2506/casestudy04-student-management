@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+import java.util.stream.Collectors;
+>>>>>>> 97fe5a6 (fix schedule)
 
 @Controller
 @RequestMapping("/student")
@@ -118,6 +122,17 @@ public class StudentController {
             
             return "student/student-panel";
         }
+<<<<<<< HEAD
+=======
+
+        // Lấy các lớp mà student đã đăng ký
+        List<Class> studentClasses = classService.findClassesByStudentId(student.getId());
+        model.addAttribute("student", student);
+        model.addAttribute("totalClasses", studentClasses.size());
+        model.addAttribute("recentClasses", studentClasses.size() > 3 ? studentClasses.subList(0, 3) : studentClasses);
+
+        return "student/student-panel";
+>>>>>>> 97fe5a6 (fix schedule)
     }
 
     @GetMapping("/dashboard-simple")
@@ -342,9 +357,13 @@ public class StudentController {
             student.setPhone("");
         }
 
-        // Tạm thời lấy tất cả lớp, sau sẽ filter theo student
-        List<Class> studentClasses = classService.findAll();
-        List<Class> availableClasses = classService.findAll(); // Lớp có thể đăng ký
+        // Lấy các lớp mà student đã đăng ký
+        List<Class> studentClasses = classService.findClassesByStudentId(student.getId());
+        // Lấy các lớp mà student chưa đăng ký
+        List<Class> allClasses = classService.findAll();
+        List<Class> availableClasses = allClasses.stream()
+                .filter(c -> !studentClasses.contains(c))
+                .collect(Collectors.toList());
 
         model.addAttribute("student", student);
         model.addAttribute("studentClasses", studentClasses);
@@ -368,8 +387,14 @@ public class StudentController {
             return "redirect:/student/classes";
         }
 
+        // Kiểm tra xem student có trong lớp này không
+        boolean isEnrolled = classService.findClassesByStudentId(student.getId())
+                .stream()
+                .anyMatch(c -> c.getId().equals(classId));
+
         model.addAttribute("student", student);
         model.addAttribute("class", studentClass);
+        model.addAttribute("isEnrolled", isEnrolled);
 
         return "student/student-class-details";
     }
@@ -391,7 +416,8 @@ public class StudentController {
             student.setPhone("");
         }
 
-        List<Class> studentClasses = classService.findAll();
+        // Lấy các lớp mà student đã đăng ký
+        List<Class> studentClasses = classService.findClassesByStudentId(student.getId());
         List<Subject> subjects = subjectService.findActiveSubjects();
 
         model.addAttribute("student", student);
@@ -419,7 +445,8 @@ public class StudentController {
             student.setPhone("");
         }
 
-        List<Class> studentClasses = classService.findAll();
+        // Lấy các lớp mà student đã đăng ký
+        List<Class> studentClasses = classService.findClassesByStudentId(student.getId());
         model.addAttribute("student", student);
         model.addAttribute("classes", studentClasses);
 
@@ -444,7 +471,15 @@ public class StudentController {
                 return "redirect:/student/classes";
             }
 
-            // TODO: Implement class registration logic
+            // Kiểm tra xem đã đăng ký chưa
+            List<Class> enrolledClasses = classService.findClassesByStudentId(student.getId());
+            if (enrolledClasses.stream().anyMatch(c -> c.getId().equals(classId))) {
+                redirectAttributes.addFlashAttribute("error", "Bạn đã đăng ký lớp này rồi!");
+                return "redirect:/student/classes";
+            }
+
+            // Đăng ký lớp học
+            classService.addStudentToClass(classId, student.getId());
             redirectAttributes.addFlashAttribute("message", "Đăng ký lớp học thành công!");
 
         } catch (Exception e) {
@@ -465,7 +500,21 @@ public class StudentController {
         }
 
         try {
-            // TODO: Implement class unregistration logic
+            Class classToUnregister = classService.findById(classId).orElse(null);
+            if (classToUnregister == null) {
+                redirectAttributes.addFlashAttribute("error", "Không tìm thấy lớp học!");
+                return "redirect:/student/classes";
+            }
+
+            // Kiểm tra xem có đăng ký chưa
+            List<Class> enrolledClasses = classService.findClassesByStudentId(student.getId());
+            if (enrolledClasses.stream().noneMatch(c -> c.getId().equals(classId))) {
+                redirectAttributes.addFlashAttribute("error", "Bạn chưa đăng ký lớp này!");
+                return "redirect:/student/classes";
+            }
+
+            // Hủy đăng ký lớp học
+            classService.removeStudentFromClass(classId, student.getId());
             redirectAttributes.addFlashAttribute("message", "Hủy đăng ký lớp học thành công!");
 
         } catch (Exception e) {

@@ -28,12 +28,11 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a th:href="@{/admin/panel}" class="sidebar-link home-link">
-            <i class="bi bi-house-door-fill"></i>Trang chủ
-        </a>
+        <a th:href="@{/teacher/dashboard}" class="active"><i class="fas fa-home me-2"></i>Trang chủ</a>
         <a th:href="@{/teacher/profile}"><i class="fas fa-user-cog me-2"></i>Tài khoản cá nhân</a>
         <a th:href="@{/teacher/classes}"><i class="fas fa-chalkboard-teacher me-2"></i>Lớp đang dạy</a>
-        <a th:href="@{/teacher/grades}"><i class="fas fa-clipboard me-2"></i>Điểm số</a>
+        <a th:href="@{/teacher/grades}"><i class="fas fa-clipboard me-2"></i>Quản lý điểm</a>
+        <a th:href="@{/teacher/schedule}"><i class="fas fa-calendar-alt me-2"></i>Lịch dạy</a>
     </div>
 
     <!-- Main content -->
@@ -54,8 +53,14 @@
             </a>
             <a th:href="@{/teacher/grades}" class="text-decoration-none">
                 <div class="card p-4">
-                    <h5>Điểm số</h5>
+                    <h5>Quản lý điểm</h5>
                     <p>Nhập, cập nhật và theo dõi điểm sinh viên</p>
+                </div>
+            </a>
+            <a th:href="@{/teacher/schedule}" class="text-decoration-none">
+                <div class="card p-4">
+                    <h5>Lịch dạy</h5>
+                    <p>Xem lịch giảng dạy và quản lý thời khóa biểu</p>
                 </div>
             </a>
         </div>
@@ -80,6 +85,10 @@
         if (sidebar) {
             sidebar.classList.toggle("show");
         }
+    }
+
+    function showComingSoon(feature) {
+        alert("Chức năng '" + feature + "' hiện đang được phát triển. Vui lòng quay lại sau.");
     }
 
     document.addEventListener("click", function (event) {

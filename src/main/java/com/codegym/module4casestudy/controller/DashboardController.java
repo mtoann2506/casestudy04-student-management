@@ -6,6 +6,7 @@ import com.codegym.module4casestudy.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,9 @@ public class DashboardController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/admin/panel")
     public String adminPanel() {
@@ -55,16 +59,8 @@ public class DashboardController {
         // Lấy danh sách tất cả giảng viên
         List<User> teachers = userService.findByRole(Role.TEACHER);
 
-        // Tạo map để lưu mật khẩu mặc định cho mỗi giảng viên
-        Map<String, String> teacherPasswords = new HashMap<>();
-        for (User teacher : teachers) {
-            // Tạo mật khẩu mặc định dựa trên username
-            String defaultPassword = generateDefaultPassword(teacher.getUsername());
-            teacherPasswords.put(teacher.getUsername(), defaultPassword);
-        }
-
         model.addAttribute("teachers", teachers);
-        model.addAttribute("teacherPasswords", teacherPasswords);
+        model.addAttribute("defaultPassword", "123456"); // Mật khẩu mặc định
         return "admin/admin-info-teacher";
     }
 
@@ -73,16 +69,8 @@ public class DashboardController {
         // Lấy danh sách tất cả sinh viên
         List<User> students = userService.findByRole(Role.STUDENT);
 
-        // Tạo map để lưu mật khẩu mặc định cho mỗi sinh viên
-        Map<String, String> studentPasswords = new HashMap<>();
-        for (User student : students) {
-            // Tạo mật khẩu mặc định dựa trên username
-            String defaultPassword = generateDefaultPassword(student.getUsername());
-            studentPasswords.put(student.getUsername(), defaultPassword);
-        }
-
         model.addAttribute("students", students);
-        model.addAttribute("studentPasswords", studentPasswords);
+        model.addAttribute("defaultPassword", "123456"); // Mật khẩu mặc định
         return "admin/admin-info-student";
     }
 
@@ -116,9 +104,9 @@ public class DashboardController {
             newUser.setRole(role);
             newUser.setEnabled(true);
 
-            // Set mật khẩu mặc định
+            // Set mật khẩu mặc định và mã hóa
             String defaultPassword = generateDefaultPassword(username);
-            newUser.setPassword(defaultPassword); // Sẽ được mã hóa trong UserDetailsServiceImpl
+            newUser.setPassword(passwordEncoder.encode(defaultPassword));
 
             userService.save(newUser);
 
@@ -133,8 +121,7 @@ public class DashboardController {
     }
 
     private String generateDefaultPassword(String username) {
-        // Tạo mật khẩu mặc định: "123456" cho tất cả giảng viên
-        // Giảng viên sẽ đăng nhập bằng mật khẩu này sau khi được reset
+        // Tạo mật khẩu mặc định: "123456" cho tất cả
         return "123456";
     }
 
@@ -144,7 +131,7 @@ public class DashboardController {
             User teacher = userService.findByUsername(username).orElse(null);
             if (teacher != null && teacher.getRole() == Role.TEACHER) {
                 String defaultPassword = generateDefaultPassword(username);
-                teacher.setPassword(defaultPassword); // Sẽ được mã hóa trong UserDetailsServiceImpl
+                teacher.setPassword(passwordEncoder.encode(defaultPassword));
                 userService.save(teacher);
                 redirectAttributes.addFlashAttribute("message",
                     "Đã reset mật khẩu cho " + teacher.getFullName() + " thành: " + defaultPassword);
@@ -163,7 +150,7 @@ public class DashboardController {
             User student = userService.findByUsername(username).orElse(null);
             if (student != null && student.getRole() == Role.STUDENT) {
                 String defaultPassword = generateDefaultPassword(username);
-                student.setPassword(defaultPassword); // Sẽ được mã hóa trong UserDetailsServiceImpl
+                student.setPassword(passwordEncoder.encode(defaultPassword));
                 userService.save(student);
                 redirectAttributes.addFlashAttribute("message",
                     "Đã reset mật khẩu cho " + student.getFullName() + " thành: " + defaultPassword);
@@ -195,8 +182,15 @@ public class DashboardController {
 
                     // Nếu có mật khẩu mới, cập nhật mật khẩu
                     if (password != null && !password.trim().isEmpty()) {
-                        // Có thể thêm logic kiểm tra mật khẩu cũ ở đây
-                        admin.setPassword(password); // Sẽ được mã hóa trong service
+                        // Kiểm tra mật khẩu cũ nếu có
+                        if (passwordOld != null && !passwordOld.trim().isEmpty()) {
+                            if (!passwordEncoder.matches(passwordOld, admin.getPassword())) {
+                                redirectAttributes.addFlashAttribute("error", "Mật khẩu cũ không đúng!");
+                                return "redirect:/admin/info-admin";
+                            }
+                        }
+                        // Mã hóa và cập nhật mật khẩu mới
+                        admin.setPassword(passwordEncoder.encode(password));
                     }
 
                     userService.save(admin);

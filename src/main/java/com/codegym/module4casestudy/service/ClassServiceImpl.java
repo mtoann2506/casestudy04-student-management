@@ -145,4 +145,14 @@ public class ClassServiceImpl implements IClassService {
     public void removeTeacherFromSubject(Long classId, Long subjectId, Long teacherId) {
         classSubjectRepository.deleteByClassEntityIdAndSubjectIdAndTeacherId(classId, subjectId, teacherId);
     }
+
+    @Override
+    public List<Class> findClassesByStudentId(Long studentId) {
+        return classRepository.findClassesByStudentId(studentId);
+    }
+
+    @Override
+    public List<Class> findClassesByTeacherId(Long teacherId) {
+        return classRepository.findClassesByTeacherId(teacherId);
+    }
 }
