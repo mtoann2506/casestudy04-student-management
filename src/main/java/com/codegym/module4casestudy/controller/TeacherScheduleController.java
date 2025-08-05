@@ -25,8 +25,6 @@ public class TeacherScheduleController {
     
     @Autowired
     private IUserService userService;
-
-
     // Lấy thông tin giảng viên hiện tại
     private User getCurrentTeacher() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
